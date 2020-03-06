@@ -20,6 +20,22 @@ open class DefaultAPI {
             completion(response?.body, error)
         }
     }
+    /**
+     Get all events
+     
+     - parameter completion: completion handler to receive the result
+     */
+    open class func events(completion: @escaping ((_ result: Result<[EventApiModel], Error>) -> Void)) {
+        eventsWithRequestBuilder().execute { (response, error) -> Void in
+            if let error = error {
+                completion(.failure(error))
+            } else if let response = response {
+                completion(.success(response.body!))
+            } else {
+                fatalError()
+            }
+        }
+    }
 
     /**
      Get all events
