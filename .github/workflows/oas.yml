@@ -32,6 +32,7 @@ jobs:
       - run: rm -rf MGMRemoteApiClient*
       - run: rm -rf docs
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
+      - run: swift build
       - run: xcodegen
 
       # Android Generate
