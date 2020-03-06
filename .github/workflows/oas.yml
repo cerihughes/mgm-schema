@@ -49,7 +49,7 @@ jobs:
         id: hasChanged
 
       # iOS Deploy
-      - run: run: /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
+      - run: /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
         if: steps.hasChanged.outputs.changed == '1'
         env:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
