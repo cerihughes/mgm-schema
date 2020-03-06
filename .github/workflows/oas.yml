@@ -18,7 +18,7 @@ jobs:
       # Versioning
       - run: echo "##[set-output name=version;]1.`git rev-list --first-parent --count HEAD`.0"
         id: versioning
-      - run: echo "Using version ${{ steps.versioning.outputs.version }}"
+      - run: echo "Using version - ${{ steps.versioning.outputs.version }}"
 
       # Brew
       - run: brew update
@@ -48,6 +48,7 @@ jobs:
       # Check for changes
       - run: if [ -z "$(git status -s)" ]; then echo "##[set-output name=changed;]0"; else echo "##[set-output name=changed;]1"; fi
         id: hasChanged
+      - run: echo "Are there local changes - ${{ steps.hasChanged.outputs.changed }}"
 
       # iOS Deploy
       - run: /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
