@@ -50,8 +50,8 @@ jobs:
 
       # iOS Deploy
       - run: |
-          /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
-          git tag -a ${{ steps.versioning.outputs.version }} -m "Created Tag v${{ steps.versioning.outputs.version }}"
+          /bin/sh ./git_push.sh cerihughes mgm-schema "Generated Version ${{ steps.versioning.outputs.version }}"
+          git tag -a ${{ steps.versioning.outputs.version }} -m "Created Tag ${{ steps.versioning.outputs.version }}"
           git push origin ${{ steps.versioning.outputs.version }}
         if: steps.hasChanged.outputs.changed == 'true'
         env:
