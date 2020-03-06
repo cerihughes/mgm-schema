@@ -27,19 +27,21 @@ jobs:
       - run: brew outdated xcodegen || brew upgrade xcodegen
       - run: brew outdated gradle || brew upgrade gradle
 
-      # iOS
+      # iOS Generate
       - run: echo '{"projectName":"MGMRemoteApiClient"}' > build/ios-oas-config.json
       - run: rm -rf MGMRemoteApiClient*
       - run: rm -rf docs
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
       - run: xcodegen
 
-      # Android
+      # Check for changes
+
+      # Android Generate and Deploy
       - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"${{ steps.build_package.outputs.version }}","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/android
       - run: cd build/android; gradle assemble
 
-      # Backend
+      # Backend Generate and Deploy
       - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"apimodel","artifactVersion":"${{ steps.build_package.outputs.version }}","packageName":"uk.co.cerihughes.mgm.model"}' > build/backend-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin-server -c build/backend-oas-config.json -o build/backend
       - run: cd build/backend; gradle assemble
