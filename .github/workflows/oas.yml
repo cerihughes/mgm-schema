@@ -13,6 +13,10 @@ jobs:
       - uses: actions/checkout@v2
       - run: mkdir build
 
+      # Versioning
+      - run: echo "##[set-output name=version;]1.${GITHUB_RUN_ID}.0"
+        id: build_package
+
       # Brew
       - run: brew update
       - run: brew install openapi-generator xcodegen gradle || true
@@ -28,11 +32,13 @@ jobs:
       - run: xcodegen
 
       # Android
-      - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"1.0.0","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"${{ steps.build_package.outputs.version }}","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
+      - run: more build/android-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/android
       - run: cd build/android; gradle assemble
 
       # Backend
-      - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"apimodel","artifactVersion":"1.0.0","packageName":"uk.co.cerihughes.mgm.model"}' > build/backend-oas-config.json
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"apimodel","artifactVersion":"${{ steps.build_package.outputs.version }}","packageName":"uk.co.cerihughes.mgm.model"}' > build/backend-oas-config.json
+      - run: more build/backend-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin-server -c build/backend-oas-config.json -o build/backend
       - run: cd build/backend; gradle assemble
