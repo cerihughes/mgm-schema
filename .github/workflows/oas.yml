@@ -14,7 +14,7 @@ jobs:
       - run: mkdir build
 
       # Versioning
-      - run: echo "##[set-output name=version;]1.`git rev-list --first-parent --count HEAD`.0"
+      - run: echo "##[set-output name=version;]1.${GITHUB_RUN_NUMBER}.0"
         id: versioning
       - run: echo "Using version - ${{ steps.versioning.outputs.version }}"
 
