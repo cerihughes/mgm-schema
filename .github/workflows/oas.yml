@@ -36,12 +36,10 @@ jobs:
 
       # Android
       - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"${{ steps.build_package.outputs.version }}","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
-      - run: more build/android-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/android
       - run: cd build/android; gradle assemble
 
       # Backend
       - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"apimodel","artifactVersion":"${{ steps.build_package.outputs.version }}","packageName":"uk.co.cerihughes.mgm.model"}' > build/backend-oas-config.json
-      - run: more build/backend-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin-server -c build/backend-oas-config.json -o build/backend
       - run: cd build/backend; gradle assemble
