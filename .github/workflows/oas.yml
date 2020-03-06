@@ -1,0 +1,30 @@
+name: Generate OAS Code for iOS, Android and Java Backend
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  generate-oas-code:
+    runs-on: macos-latest
+
+    steps:
+      # Checkout
+      - uses: actions/checkout@v2
+      - run: mkdir build
+
+      # Brew
+      - run: brew update
+      - run: brew install openapi-generator xcodegen || true
+      - run: brew outdated openapi-generator || brew upgrade openapi-generator
+      - run: brew outdated xcodegen || brew upgrade xcodegen
+
+      # iOS
+      - run: echo '{"projectName":"MGMRemoteApiClient"}' > build/ios-oas-config.json
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
+      - run: rm -rf MGMRemoteApiClient.xcodeproj
+      - run: xcodegen
+
+      # Android
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"1.0.0","apiPackage":"uk.co.cerihughes.mgm.android.remoteapi","invokerPackage":"uk.co.cerihughes.invoker","modelPackage":"uk.co.cerihughes.mgm.android.model"}' > build/android-oas-config.json
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/Android
