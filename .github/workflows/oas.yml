@@ -3,8 +3,6 @@ name: Generate OAS Code for iOS, Android and Java Backend
 on:
   push:
     branches: [ master ]
-  pull_request:
-     branches: [ master ]
 
 jobs:
   generate-oas-code:
@@ -54,7 +52,7 @@ jobs:
       - run: /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
         if: steps.hasChanged.outputs.changed == 'true'
         env:
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Android Deploy
       - run: echo 'Will deploy Android...'
