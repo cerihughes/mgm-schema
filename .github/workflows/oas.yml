@@ -15,9 +15,10 @@ jobs:
 
       # Brew
       - run: brew update
-      - run: brew install openapi-generator xcodegen || true
+      - run: brew install openapi-generator xcodegen gradle || true
       - run: brew outdated openapi-generator || brew upgrade openapi-generator
       - run: brew outdated xcodegen || brew upgrade xcodegen
+      - run: brew outdated gradle || brew upgrade gradle
 
       # iOS
       - run: echo '{"projectName":"MGMRemoteApiClient"}' > build/ios-oas-config.json
@@ -26,5 +27,6 @@ jobs:
       - run: xcodegen
 
       # Android
-      - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"1.0.0","apiPackage":"uk.co.cerihughes.mgm.android.remoteapi","invokerPackage":"uk.co.cerihughes.invoker","modelPackage":"uk.co.cerihughes.mgm.android.model"}' > build/android-oas-config.json
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"remoteapi","artifactVersion":"1.0.0","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/Android
+      - run: cd build/Android; gradle assemble
