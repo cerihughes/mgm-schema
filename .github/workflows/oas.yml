@@ -46,20 +46,20 @@ jobs:
       - run: cd build/backend; gradle assemble
 
       # Check for changes
-      - run: if [ -z "$(git status -s)" ]; then echo "##[set-output name=changed;]0"; else echo "##[set-output name=changed;]1"; fi
+      - run: if [ -z "$(git status -s)" ]; then echo "##[set-output name=changed;]false"; else echo "##[set-output name=changed;]true"; fi
         id: hasChanged
-      - run: echo "Are there local changes - ${{ steps.hasChanged.outputs.changed }}"
+      - run: echo "Local changes? - ${{ steps.hasChanged.outputs.changed }}"
 
       # iOS Deploy
       - run: /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
-        if: steps.hasChanged.outputs.changed == '1'
+        if: steps.hasChanged.outputs.changed == 'true'
         env:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       # Android Deploy
       - run: echo 'Will deploy Android...'
-        if: steps.hasChanged.outputs.changed == '1'
+        if: steps.hasChanged.outputs.changed == 'true'
 
       # Backend Deploy
       - run: echo 'Will deploy Backend...'
-        if: steps.hasChanged.outputs.changed == '1'
+        if: steps.hasChanged.outputs.changed == 'true'
