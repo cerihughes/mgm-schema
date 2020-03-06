@@ -23,10 +23,16 @@ jobs:
       # iOS
       - run: echo '{"projectName":"MGMRemoteApiClient"}' > build/ios-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
-      - run: rm -rf MGMRemoteApiClient.xcodeproj
+      - run: rm -rf MGMRemoteApiClient*
+      - run: rm -rf docs
       - run: xcodegen
 
       # Android
-      - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"remoteapi","artifactVersion":"1.0.0","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
-      - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/Android
-      - run: cd build/Android; gradle assemble
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"1.0.0","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/android
+      - run: cd build/android; gradle assemble
+
+      # Backend
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"apimodel","artifactVersion":"1.0.0","packageName":"uk.co.cerihughes.mgm.model"}' > build/backend-oas-config.json
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin-server -c build/backend-oas-config.json -o build/backend
+      - run: cd build/backend; gradle assemble
