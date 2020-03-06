@@ -20,9 +20,8 @@ jobs:
 
       # Brew
       - run: brew update
-      - run: brew install openapi-generator xcodegen gradle || true
+      - run: brew install openapi-generator gradle || true
       - run: brew outdated openapi-generator || brew upgrade openapi-generator
-      - run: brew outdated xcodegen || brew upgrade xcodegen
       - run: brew outdated gradle || brew upgrade gradle
 
       # iOS Generate
@@ -30,8 +29,8 @@ jobs:
       - run: rm -rf MGMRemoteApiClient*
       - run: rm -rf docs
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
+      - run: rm -rf Cartfile
       - run: swift build
-      - run: xcodegen
 
       # Android Generate
       - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"${{ steps.versioning.outputs.version }}","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
