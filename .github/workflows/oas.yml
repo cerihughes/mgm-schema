@@ -34,16 +34,30 @@ jobs:
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
       - run: xcodegen
 
-      # Check for changes
-      - run: if [ -z "$(git status -s)" ]; then "##[set-output name=version;]0"; else echo "##[set-output name=version;]1"; fi
-        id: hasChanged
-
-      # Android Generate and Deploy
+      # Android Generate
       - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"${{ steps.versioning.outputs.version }}","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/android
       - run: cd build/android; gradle assemble
 
-      # Backend Generate and Deploy
+      # Backend Generate
       - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"apimodel","artifactVersion":"${{ steps.versioning.outputs.version }}","packageName":"uk.co.cerihughes.mgm.model"}' > build/backend-oas-config.json
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin-server -c build/backend-oas-config.json -o build/backend
       - run: cd build/backend; gradle assemble
+
+      # Check for changes
+      - run: if [ -z "$(git status -s)" ]; then echo "##[set-output name=changed;]0"; else echo "##[set-output name=changed;]1"; fi
+        id: hasChanged
+
+      # iOS Deploy
+      - run: run: /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
+        if: steps.hasChanged.outputs.changed == '1'
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+      # Android Deploy
+      - run: echo 'Will deploy Android...'
+        if: steps.hasChanged.outputs.changed == '1'
+
+      # Backend Deploy
+      - run: echo 'Will deploy Backend...'
+        if: steps.hasChanged.outputs.changed == '1'
