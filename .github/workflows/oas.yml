@@ -1,0 +1,65 @@
+name: Generate OAS Code for iOS, Android and Java Backend
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+     branches: [ master ]
+
+jobs:
+  generate-oas-code:
+    runs-on: macos-latest
+
+    steps:
+      # Checkout
+      - uses: actions/checkout@v2
+      - run: mkdir build
+
+      # Versioning
+      - run: echo "##[set-output name=version;]1.`git rev-list --first-parent --count HEAD`.0"
+        id: versioning
+      - run: echo "Using version - ${{ steps.versioning.outputs.version }}"
+
+      # Brew
+      - run: brew update
+      - run: brew install openapi-generator xcodegen gradle || true
+      - run: brew outdated openapi-generator || brew upgrade openapi-generator
+      - run: brew outdated xcodegen || brew upgrade xcodegen
+      - run: brew outdated gradle || brew upgrade gradle
+
+      # iOS Generate
+      - run: echo '{"projectName":"MGMRemoteApiClient"}' > build/ios-oas-config.json
+      - run: rm -rf MGMRemoteApiClient*
+      - run: rm -rf docs
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
+      - run: swift build
+      - run: xcodegen
+
+      # Android Generate
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"${{ steps.versioning.outputs.version }}","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/android
+      - run: cd build/android; gradle assemble
+
+      # Backend Generate
+      - run: echo '{"groupId":"uk.co.cerihughes.mgm","artifactId":"apimodel","artifactVersion":"${{ steps.versioning.outputs.version }}","packageName":"uk.co.cerihughes.mgm.model"}' > build/backend-oas-config.json
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin-server -c build/backend-oas-config.json -o build/backend
+      - run: cd build/backend; gradle assemble
+
+      # Check for changes
+      - run: if [ -z "$(git status -s)" ]; then echo "##[set-output name=changed;]false"; else echo "##[set-output name=changed;]true"; fi
+        id: hasChanged
+      - run: echo "Local changes? - ${{ steps.hasChanged.outputs.changed }}"
+
+      # iOS Deploy
+      - run: /bin/sh ./git_push.sh cerihughes mgm-schema "Regenerate Remote API"
+        if: steps.hasChanged.outputs.changed == 'true'
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+      # Android Deploy
+      - run: echo 'Will deploy Android...'
+        if: steps.hasChanged.outputs.changed == 'true'
+
+      # Backend Deploy
+      - run: echo 'Will deploy Backend...'
+        if: steps.hasChanged.outputs.changed == 'true'
