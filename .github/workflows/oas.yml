@@ -26,7 +26,7 @@ jobs:
       - run: brew outdated gradle || brew upgrade gradle
 
       # iOS Generate
-      - run: echo '{"projectName":"MGMRemoteApiClient"}' > build/ios-oas-config.json
+      - run: echo '{"projectName":"MGMRemoteApiClient","responseAs":"Result"}' > build/ios-oas-config.json
       - run: rm -rf MGMRemoteApiClient*
       - run: rm -rf docs
       - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
