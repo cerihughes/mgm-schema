@@ -28,9 +28,9 @@ jobs:
 
       # iOS
       - run: echo '{"projectName":"MGMRemoteApiClient"}' > build/ios-oas-config.json
-      - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
       - run: rm -rf MGMRemoteApiClient*
       - run: rm -rf docs
+      - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
       - run: xcodegen
 
       # Android
