@@ -8,8 +8,8 @@
 import Foundation
 
 
+public struct EventApiModel: Codable { 
 
-public struct EventApiModel: Codable {
 
     public var number: Int
     public var date: String?
@@ -27,6 +27,4 @@ public struct EventApiModel: Codable {
         self.playlist = playlist
     }
 
-
 }
-

@@ -8,8 +8,8 @@
 import Foundation
 
 
+public struct ImageApiModel: Codable { 
 
-public struct ImageApiModel: Codable {
 
     public var size: Int
     public var url: String
@@ -19,6 +19,4 @@ public struct ImageApiModel: Codable {
         self.url = url
     }
 
-
 }
-

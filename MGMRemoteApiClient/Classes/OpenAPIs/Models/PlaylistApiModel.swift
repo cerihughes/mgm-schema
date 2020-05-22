@@ -8,8 +8,8 @@
 import Foundation
 
 
+public struct PlaylistApiModel: Codable { 
 
-public struct PlaylistApiModel: Codable {
 
     public var spotifyId: String
     public var name: String
@@ -23,6 +23,4 @@ public struct PlaylistApiModel: Codable {
         self.images = images
     }
 
-
 }
-

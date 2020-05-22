@@ -8,8 +8,8 @@
 import Foundation
 
 
+public struct AlbumApiModel: Codable { 
 
-public struct AlbumApiModel: Codable {
 
     public enum ModelType: String, Codable {
         case classic = "classic"
@@ -31,6 +31,4 @@ public struct AlbumApiModel: Codable {
         self.images = images
     }
 
-
 }
-
