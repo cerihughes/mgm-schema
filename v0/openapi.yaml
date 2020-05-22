@@ -1,0 +1,110 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Music Geek Monthly API
+paths:
+  /mgm.json:
+    get:
+      summary: Get all events
+      description: ""
+      operationId: events
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventApiModel"
+servers:
+  - url: https://mgm-gcp.appspot.com/
+components:
+  schemas:
+    AlbumApiModel:
+      type: object
+      required:
+        - artist
+        - name
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - classic
+            - new
+        spotifyId:
+          type: string
+        name:
+          type: string
+        artist:
+          type: string
+        score:
+          type: number
+          format: float
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/ImageApiModel"
+    EventApiModel:
+      type: object
+      required:
+        - number
+        - location
+      properties:
+        number:
+          type: integer
+          format: int32
+        date:
+          type: string
+        location:
+          $ref: "#/components/schemas/LocationApiModel"
+        classicAlbum:
+          $ref: "#/components/schemas/AlbumApiModel"
+        newAlbum:
+          $ref: "#/components/schemas/AlbumApiModel"
+        playlist:
+          $ref: "#/components/schemas/PlaylistApiModel"
+    ImageApiModel:
+      type: object
+      required:
+        - size
+        - url
+      properties:
+        size:
+          type: integer
+          format: int32
+        url:
+          type: string
+    LocationApiModel:
+      type: object
+      required:
+        - latitude
+        - longitude
+        - name
+      properties:
+        name:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+    PlaylistApiModel:
+      type: object
+      required:
+        - name
+        - owner
+        - spotifyId
+      properties:
+        spotifyId:
+          type: string
+        name:
+          type: string
+        owner:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/ImageApiModel"
