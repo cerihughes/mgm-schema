@@ -20,8 +20,9 @@ jobs:
 
       # Brew
       - run: brew update
-      - run: brew install openapi-generator gradle || true
+      - run: brew install openapi-generator swiftformat gradle || true
       - run: brew outdated openapi-generator || brew upgrade openapi-generator
+      - run: brew outdated swiftformat || brew upgrade swiftformat
       - run: brew outdated gradle || brew upgrade gradle
 
       # iOS Generate
