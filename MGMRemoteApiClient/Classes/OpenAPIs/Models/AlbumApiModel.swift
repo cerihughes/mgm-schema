@@ -7,14 +7,12 @@
 
 import Foundation
 
-
-public struct AlbumApiModel: Codable { 
-
-
+public struct AlbumApiModel: Codable {
     public enum ModelType: String, Codable {
-        case classic = "classic"
-        case new = "new"
+        case classic
+        case new
     }
+
     public var type: ModelType
     public var spotifyId: String?
     public var name: String
@@ -30,5 +28,4 @@ public struct AlbumApiModel: Codable {
         self.score = score
         self.images = images
     }
-
 }

@@ -7,22 +7,21 @@
 
 import Foundation
 
-
-
 open class DefaultAPI {
     /**
      Get all events
-     
+
      - parameter completion: completion handler to receive the data and the error objects
      */
-    open class func events(completion: @escaping ((_ data: [EventApiModel]?,_ error: Error?) -> Void)) {
+    open class func events(completion: @escaping ((_ data: [EventApiModel]?, _ error: Error?) -> Void)) {
         eventsWithRequestBuilder().execute { (response, error) -> Void in
             completion(response?.body, error)
         }
     }
+
     /**
      Get all events
-     
+
      - parameter completion: completion handler to receive the result
      */
     open class func events(completion: @escaping ((_ result: Result<[EventApiModel], Error>) -> Void)) {
@@ -40,18 +39,17 @@ open class DefaultAPI {
     /**
      Get all events
      - GET /mgm.json
-     - returns: RequestBuilder<[EventApiModel]> 
+     - returns: RequestBuilder<[EventApiModel]>
      */
     open class func eventsWithRequestBuilder() -> RequestBuilder<[EventApiModel]> {
         let path = "/mgm.json"
         let URLString = MGMRemoteApiClientAPI.basePath + path
-        let parameters: [String:Any]? = nil
-        
+        let parameters: [String: Any]? = nil
+
         let url = URLComponents(string: URLString)
 
         let requestBuilder: RequestBuilder<[EventApiModel]>.Type = MGMRemoteApiClientAPI.requestBuilderFactory.getBuilder()
 
-        return requestBuilder.init(method: "GET", URLString: (url?.string ?? URLString), parameters: parameters, isBody: false)
+        return requestBuilder.init(method: "GET", URLString: url?.string ?? URLString, parameters: parameters, isBody: false)
     }
-
 }

@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-public struct EventApiModel: Codable { 
-
-
+public struct EventApiModel: Codable {
     public var number: Int
     public var date: String?
     public var location: LocationApiModel?
@@ -26,5 +23,4 @@ public struct EventApiModel: Codable {
         self.newAlbum = newAlbum
         self.playlist = playlist
     }
-
 }

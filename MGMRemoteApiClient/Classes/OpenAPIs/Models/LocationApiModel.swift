@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-public struct LocationApiModel: Codable { 
-
-
+public struct LocationApiModel: Codable {
     public var name: String
     public var latitude: Double
     public var longitude: Double
@@ -20,5 +17,4 @@ public struct LocationApiModel: Codable {
         self.latitude = latitude
         self.longitude = longitude
     }
-
 }
