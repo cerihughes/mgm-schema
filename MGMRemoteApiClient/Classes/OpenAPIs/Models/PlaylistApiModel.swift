@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct PlaylistApiModel: Codable {
-
     public var spotifyId: String
     public var name: String
     public var owner: String
@@ -22,7 +19,4 @@ public struct PlaylistApiModel: Codable {
         self.owner = owner
         self.images = images
     }
-
-
 }
-

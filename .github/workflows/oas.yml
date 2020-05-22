@@ -25,16 +25,10 @@ jobs:
       - run: brew outdated gradle || brew upgrade gradle
 
       # iOS Generate
-      - run: echo '{"projectName":"MGMRemoteApiClient","responseAs":"Result"}' > build/ios-oas-config.json
-      - run: rm -rf MGMRemoteApiClient*
-      - run: rm -rf docs
-      - run: openapi-generator generate -i 'v1/openapi.yaml' -g swift4 -c build/ios-oas-config.json -o .
-      - run: rm -rf Cartfile
-      - run: swift build
+      - run: /bin/sh ./generate-ios.sh
 
       # Android Generate
-      - run: echo '{"groupId":"uk.co.cerihughes.mgm.android","artifactId":"remoteapi","artifactVersion":"${{ steps.versioning.outputs.version }}","packageName":"uk.co.cerihughes.mgm.android.remoteapi"}' > build/android-oas-config.json
-      - run: openapi-generator generate -i 'v1/openapi.yaml' -g kotlin -c build/android-oas-config.json -o build/android
+      - run: /bin/sh ./generate-android.sh -v "${{ steps.versioning.outputs.version }}"
       - run: cd build/android; gradle assemble
 
       # Backend Generate
