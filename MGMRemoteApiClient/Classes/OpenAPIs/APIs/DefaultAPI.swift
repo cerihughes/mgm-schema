@@ -11,27 +11,16 @@ open class DefaultAPI {
     /**
      Get all events
 
-     - parameter completion: completion handler to receive the data and the error objects
-     */
-    open class func events(completion: @escaping ((_ data: [EventApiModel]?, _ error: Error?) -> Void)) {
-        eventsWithRequestBuilder().execute { (response, error) -> Void in
-            completion(response?.body, error)
-        }
-    }
-
-    /**
-     Get all events
-
+     - parameter apiResponseQueue: The queue on which api response is dispatched.
      - parameter completion: completion handler to receive the result
      */
-    open class func events(completion: @escaping ((_ result: Result<[EventApiModel], Error>) -> Void)) {
-        eventsWithRequestBuilder().execute { (response, error) -> Void in
-            if let error = error {
-                completion(.failure(error))
-            } else if let response = response {
+    open class func events(apiResponseQueue: DispatchQueue = MGMRemoteApiClientAPI.apiResponseQueue, completion: @escaping ((_ result: Swift.Result<[EventApiModel], Error>) -> Void)) {
+        eventsWithRequestBuilder().execute(apiResponseQueue) { result -> Void in
+            switch result {
+            case let .success(response):
                 completion(.success(response.body!))
-            } else {
-                fatalError()
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
     }

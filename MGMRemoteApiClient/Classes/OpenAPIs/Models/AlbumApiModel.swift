@@ -8,7 +8,7 @@
 import Foundation
 
 public struct AlbumApiModel: Codable {
-    public enum ModelType: String, Codable {
+    public enum ModelType: String, Codable, CaseIterable {
         case classic
         case new
     }

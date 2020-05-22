@@ -7,19 +7,9 @@
 
 import Foundation
 
-public typealias EncodeResult = (data: Data?, error: Error?)
-
 open class CodableHelper {
     private static var customDateFormatter: DateFormatter?
-    private static var defaultDateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.calendar = Calendar(identifier: .iso8601)
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        dateFormatter.dateFormat = Configuration.dateFormat
-        return dateFormatter
-    }()
-
+    private static var defaultDateFormatter: DateFormatter = OpenISO8601DateFormatter()
     private static var customJSONDecoder: JSONDecoder?
     private static var defaultJSONDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
@@ -50,29 +40,11 @@ open class CodableHelper {
         set { self.customJSONEncoder = newValue }
     }
 
-    open class func decode<T>(_ type: T.Type, from data: Data) -> (decodableObj: T?, error: Error?) where T: Decodable {
-        var returnedDecodable: T? = nil
-        var returnedError: Error? = nil
-
-        do {
-            returnedDecodable = try jsonDecoder.decode(type, from: data)
-        } catch {
-            returnedError = error
-        }
-
-        return (returnedDecodable, returnedError)
+    open class func decode<T>(_ type: T.Type, from data: Data) -> Swift.Result<T, Error> where T: Decodable {
+        return Swift.Result { try self.jsonDecoder.decode(type, from: data) }
     }
 
-    open class func encode<T>(_ value: T) -> EncodeResult where T: Encodable {
-        var returnedData: Data?
-        var returnedError: Error?
-
-        do {
-            returnedData = try jsonEncoder.encode(value)
-        } catch {
-            returnedError = error
-        }
-
-        return (returnedData, returnedError)
+    open class func encode<T>(_ value: T) -> Swift.Result<Data, Error> where T: Encodable {
+        return Swift.Result { try self.jsonEncoder.encode(value) }
     }
 }
